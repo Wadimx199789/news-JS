@@ -7,7 +7,7 @@ import globals from 'globals';
 
 export default defineConfig(
     {
-        ignores: ['dist/', 'node_modules/'],
+        ignores: ['dist/'],
     },
     js.configs.recommended,
     tsConfigs.recommended,
@@ -15,47 +15,34 @@ export default defineConfig(
     importX.flatConfigs.typescript,
     {
         rules: {
-            'no-debugger': 'off',
-            'no-console': 'off',
             '@typescript-eslint/no-explicit-any': 'error',
-        },
-    },
-    {
-        files: ['src/**/*.{js,ts}'],
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                process: 'readonly',
-            },
         },
     },
     {
         files: ['**/*.ts'],
         extends: [tsConfigs.recommendedTypeChecked],
-        languageOptions: {
-            parserOptions: {
-                projectService: true,
-                tsconfigRootDir: import.meta.dirname,
-            },
-        },
         rules: {
             '@typescript-eslint/explicit-function-return-type': 'error',
         },
     },
     {
-        files: ['webpack*.js'],
+        files: ['src/**/*.ts'],
         languageOptions: {
-            sourceType: 'commonjs',
-            globals: globals.node,
-        },
-        rules: {
-            '@typescript-eslint/no-require-imports': 'off',
+            globals: globals.browser,
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
         },
     },
     {
-        files: ['eslint.config.mjs'],
+        files: ['webpack*.ts'],
         languageOptions: {
             globals: globals.node,
+            parserOptions: {
+                project: './tsconfig.node.json',
+                tsconfigRootDir: import.meta.dirname,
+            },
         },
     },
     prettierConfig
