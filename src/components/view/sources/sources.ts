@@ -1,8 +1,9 @@
 import './sources.css';
 import { getElement } from '../../../utils/dom';
+import type { SourceDto } from '../../../types/api';
 
 class Sources {
-    draw(data) {
+    draw(data: SourceDto[]): void {
         const fragment = document.createDocumentFragment();
         const sourceItemTemp = getElement<HTMLTemplateElement>('#sourceItemTemp');
 

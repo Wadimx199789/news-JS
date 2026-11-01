@@ -1,8 +1,9 @@
 import './news.css';
 import { getElement } from '../../../utils/dom';
+import type { ArticleDto } from '../../../types/api';
 
 class News {
-    draw(data) {
+    draw(data: ArticleDto[]): void {
         const fragment = document.createDocumentFragment();
         const newsItemTemp = getElement<HTMLTemplateElement>('#newsItemTemp');
 
@@ -34,7 +35,7 @@ class News {
         newsContainer.appendChild(fragment);
     }
 
-    showMessage(message) {
+    showMessage(message: string): void {
         getElement('.news').textContent = message;
     }
 }

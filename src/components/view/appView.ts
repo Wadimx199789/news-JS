@@ -1,38 +1,37 @@
 import News from './news/news';
 import Sources from './sources/sources';
 import { getElement } from '../../utils/dom';
+import type { ArticleDto, SourceDto } from '../../types/api';
+import type { SourceSelectHandler } from '../../types/handlers';
 
 class AppView {
-    constructor() {
-        this.news = new News();
-        this.sources = new Sources();
-    }
+    private readonly news = new News();
+    private readonly sources = new Sources();
 
-    drawNews(articles) {
+    drawNews(articles: ArticleDto[]): void {
         this.news.draw(articles);
     }
 
-    drawSources(sources) {
+    drawSources(sources: SourceDto[]): void {
         this.sources.draw(sources);
     }
 
-    showError(error) {
+    showError(error: Error): void {
         console.error(error);
         this.news.showMessage(`Sorry, something went wrong: ${error.message}`);
     }
 
-    bindSourceSelect(handler) {
+    bindSourceSelect(handler: SourceSelectHandler): void {
         const sourcesContainer = getElement('.sources');
 
         sourcesContainer.addEventListener('click', (e) => {
-            let target = e.target;
+            if (!(e.target instanceof Element)) return;
 
-            while (target !== sourcesContainer) {
-                if (target.classList.contains('source__item')) {
-                    handler(target.getAttribute('data-source-id'));
-                    return;
-                }
-                target = target.parentNode;
+            const sourceItem = e.target.closest('.source__item');
+            const sourceId = sourceItem?.getAttribute('data-source-id');
+
+            if (sourceItem && sourcesContainer.contains(sourceItem) && sourceId) {
+                handler(sourceId);
             }
         });
     }
