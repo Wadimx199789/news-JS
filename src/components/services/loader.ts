@@ -4,20 +4,13 @@ class Loader {
         this.options = options;
     }
 
-    getResp(
-        { endpoint, options = {} },
-        callback = () => {
-            console.error('No callback for GET response');
-        }
-    ) {
-        this.load('GET', endpoint, callback, options);
+    getResp({ endpoint, options = {} }, onSuccess, onError) {
+        this.load('GET', endpoint, onSuccess, onError, options);
     }
 
     errorHandler(res) {
         if (!res.ok) {
-            if (res.status === 401 || res.status === 404)
-                console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
-            throw Error(res.statusText);
+            throw new Error(`${res.status} ${res.statusText}`);
         }
 
         return res;
@@ -34,12 +27,12 @@ class Loader {
         return url.slice(0, -1);
     }
 
-    load(method, endpoint, callback, options = {}) {
+    load(method, endpoint, onSuccess, onError, options = {}) {
         fetch(this.makeUrl(options, endpoint), { method })
             .then(this.errorHandler)
             .then((res) => res.json())
-            .then((data) => callback(data))
-            .catch((err) => console.error(err));
+            .then((data) => onSuccess(data))
+            .catch((err) => onError(err));
     }
 }
 
