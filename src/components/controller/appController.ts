@@ -1,10 +1,16 @@
+import type NewsModel from '../model/newsModel';
+import type AppView from '../view/appView';
+
 class AppController {
-    constructor(model, view) {
+    private readonly model: NewsModel;
+    private readonly view: AppView;
+
+    constructor(model: NewsModel, view: AppView) {
         this.model = model;
         this.view = view;
     }
 
-    start() {
+    public start(): void {
         this.view.bindSourceSelect((sourceId) => this.handleSourceSelect(sourceId));
         this.model.getSources(
             (sources) => this.view.drawSources(sources),
@@ -12,7 +18,7 @@ class AppController {
         );
     }
 
-    handleSourceSelect(sourceId) {
+    private handleSourceSelect(sourceId: string): void {
         if (!this.model.selectSource(sourceId)) return;
 
         this.model.getNews(

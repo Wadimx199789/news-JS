@@ -4,6 +4,8 @@ import AppController from '../controller/appController';
 import AppView from '../view/appView';
 
 class App {
+    private readonly controller: AppController;
+
     constructor() {
         const loader = new Loader(process.env.API_URL, {
             apiKey: process.env.API_KEY,
@@ -14,7 +16,7 @@ class App {
         this.controller = new AppController(model, view);
     }
 
-    start() {
+    public start(): void {
         this.controller.start();
     }
 }
