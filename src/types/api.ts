@@ -41,10 +41,7 @@ export interface SourcesResponseDto {
     sources: SourceDto[];
 }
 
-export interface ArticleSourceDto {
-    id: string;
-    name: string;
-}
+export type ArticleSourceDto = Pick<SourceDto, 'id' | 'name'>;
 
 export interface ArticleDto {
     source: ArticleSourceDto;
