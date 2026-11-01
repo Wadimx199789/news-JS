@@ -23,6 +23,7 @@ export default defineConfig(
         extends: [tsConfigs.recommendedTypeChecked],
         rules: {
             '@typescript-eslint/explicit-function-return-type': 'error',
+            '@typescript-eslint/parameter-properties': 'error',
         },
     },
     {
