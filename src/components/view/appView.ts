@@ -8,12 +8,24 @@ class AppView {
     private readonly news = new News();
     private readonly sources = new Sources();
 
+    constructor() {
+        this.enableWheelScroll();
+    }
+
     drawNews(articles: ArticleDto[]): void {
         this.news.draw(articles);
     }
 
     drawSources(sources: SourceDto[]): void {
         this.sources.draw(sources);
+    }
+
+    setActiveSource(sourceId: string): void {
+        this.sources.setActive(sourceId);
+    }
+
+    showLoading(): void {
+        this.news.showLoading();
     }
 
     showError(error: Error): void {
@@ -34,6 +46,21 @@ class AppView {
                 handler(sourceId);
             }
         });
+    }
+
+    private enableWheelScroll(): void {
+        const sourcesContainer = getElement('.sources');
+
+        sourcesContainer.addEventListener(
+            'wheel',
+            (e) => {
+                if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+
+                e.preventDefault();
+                sourcesContainer.scrollLeft += e.deltaY;
+            },
+            { passive: false }
+        );
     }
 }
 

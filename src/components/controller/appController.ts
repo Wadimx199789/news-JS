@@ -21,6 +21,9 @@ class AppController {
     private handleSourceSelect(sourceId: string): void {
         if (!this.model.selectSource(sourceId)) return;
 
+        this.view.setActiveSource(sourceId);
+        this.view.showLoading();
+
         this.model.getNews(
             (articles) => this.view.drawNews(articles),
             (error) => this.view.showError(error)

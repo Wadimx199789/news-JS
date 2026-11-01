@@ -20,6 +20,14 @@ class Sources {
         sourcesContainer.innerHTML = '';
         sourcesContainer.append(fragment);
     }
+
+    setActive(sourceId: string): void {
+        getElement('.sources')
+            .querySelectorAll<HTMLElement>('.source__item')
+            .forEach((item) => {
+                item.setAttribute('aria-pressed', String(item.dataset.sourceId === sourceId));
+            });
+    }
 }
 
 export default Sources;
