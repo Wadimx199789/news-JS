@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+
+        "target": "ES2020",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "types": [],
+
+        "allowJs": true,
+        "checkJs": false,
+
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "sourceMap": true,
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true
+    },
+    "include": ["src"]
+}

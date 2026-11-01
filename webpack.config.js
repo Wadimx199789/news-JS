@@ -1,14 +1,20 @@
 const path = require('path');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const DotenvWebpackPlugin = require('dotenv-webpack');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const baseConfig = {
-    entry: path.resolve(__dirname, './src/index.js'),
+    entry: path.resolve(__dirname, './src/index'),
     mode: 'development',
     module: {
         rules: [
+            {
+                test: /\.ts$/i,
+                loader: 'ts-loader',
+                options: { transpileOnly: true },
+                exclude: /node_modules/,
+            },
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
@@ -16,11 +22,12 @@ const baseConfig = {
         ],
     },
     resolve: {
-        extensions: ['.js'],
+        extensions: ['.ts', '.js'],
     },
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, './dist'),
+        clean: true,
     },
     plugins: [
         new DotenvWebpackPlugin(),
@@ -28,7 +35,7 @@ const baseConfig = {
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
         }),
-        new CleanWebpackPlugin(),
+        new ForkTsCheckerWebpackPlugin(),
     ],
 };
 
