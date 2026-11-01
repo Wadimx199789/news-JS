@@ -1,14 +1,20 @@
+import type { Callback, ErrorCallback } from '../../types/handlers';
+import type { Endpoint, LoaderOptions, QueryOptions, RequestParams } from '../../types/loader';
+
 class Loader {
-    constructor(baseLink, options) {
+    private readonly baseLink: string;
+    private readonly options: Readonly<LoaderOptions>;
+
+    constructor(baseLink: string, options: LoaderOptions) {
         this.baseLink = baseLink;
         this.options = options;
     }
 
-    getResp({ endpoint, options = {} }, onSuccess, onError) {
-        this.load('GET', endpoint, onSuccess, onError, options);
+    public getResp<T>({ endpoint, options = {} }: RequestParams, onSuccess: Callback<T>, onError: ErrorCallback): void {
+        this.load<T>(endpoint, onSuccess, onError, options);
     }
 
-    errorHandler(res) {
+    private errorHandler(res: Response): Response {
         if (!res.ok) {
             throw new Error(`${res.status} ${res.statusText}`);
         }
@@ -16,23 +22,30 @@ class Loader {
         return res;
     }
 
-    makeUrl(options, endpoint) {
-        const urlOptions = { ...this.options, ...options };
+    private makeUrl(options: QueryOptions, endpoint: Endpoint): string {
+        const urlOptions: Record<string, string | undefined> = { ...this.options, ...options };
         let url = `${this.baseLink}${endpoint}?`;
 
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
+        Object.entries(urlOptions).forEach(([key, value]) => {
+            if (value !== undefined) {
+                url += `${key}=${value}&`;
+            }
         });
 
         return url.slice(0, -1);
     }
 
-    load(method, endpoint, onSuccess, onError, options = {}) {
-        fetch(this.makeUrl(options, endpoint), { method })
-            .then(this.errorHandler)
-            .then((res) => res.json())
+    private load<T>(
+        endpoint: Endpoint,
+        onSuccess: Callback<T>,
+        onError: ErrorCallback,
+        options: QueryOptions = {}
+    ): void {
+        fetch(this.makeUrl(options, endpoint))
+            .then((res) => this.errorHandler(res))
+            .then((res) => res.json() as Promise<T>)
             .then((data) => onSuccess(data))
-            .catch((err) => onError(err));
+            .catch((err: unknown) => onError(err instanceof Error ? err : new Error(String(err))));
     }
 }
 
